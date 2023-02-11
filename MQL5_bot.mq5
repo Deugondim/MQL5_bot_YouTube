@@ -105,6 +105,15 @@ void OnTick()
  
    }
    
+      //---Enter Trades---/
+   if(OpenSignalMacd == "Long" && OpenSignalEma == "Long" ){
+   
+      ProcessTradeOpen(ORDER_TYPE_BUY);
+   
+   }else if(OpenSignalMacd == "Short" && OpenSignalEma == "Short" ){
+      
+      ProcessTradeOpen(ORDER_TYPE_SELL);
+   }
    
    Comment("\n \rExpert:",InpMagicNumber, "\n\r",
    "MT5 Server Time: ", TimeCurrent(), "\n\r",
