@@ -17,6 +17,12 @@ input int                  InpMagicNumber = 2000001;     //Unique identifier for
 input string               InpTradeComment = __FILE__;   //Optional comment for trades
 input ENUM_APPLIED_PRICE   InpAppliedPrice = PRICE_CLOSE;//Applied price for indicators  
 
+//Global Variables
+string   indicatorMetrics = ""; // Initiate String for indicatorMetrics Variable. This will reset variable each time OnTick function runs
+int TicksRecievedCount =0; // Counts the number of ticks from oninit function
+int TicksProcessedCount =0; // Counts the number of ticks processed from oninit function based off candle opens only
+static datetime TimeLastTickProcessed; //Stores the last time a tick  was processed based off cafle opens only
+
 //+------------------------------------------------------------------+
 //| Expert initialization function                                   |
 //+------------------------------------------------------------------+
