@@ -105,3 +105,26 @@ void OnTick()
 
   }
 //+------------------------------------------------------------------+
+//+------------------------------------------------------------------+
+//| /Custom functions/                                               |
+//+------------------------------------------------------------------+
+  
+ // Custom function to get MACD signals
+  
+  
+string GetMacdOpenSignal()
+{   
+   //Set symbol string and indicator buffers
+   string   CurrentSymbol = Symbol();
+   const int StartCandle = 0;
+   const int RequiredCandles = 3; //How many candles are required to be stored in Expert - (prior, current confirmed, not confirmed)
+   //Indicator Variables and Buffers
+   const int IndexMacd = 0; //Macd Line
+   const int IndexSignal = 1;
+   double   BufferMacd[];  //(prior, current confirmed, not confirmed)
+   double   BufferSignal[];   //(prior, current confirmed, not confirmed)
+   
+   
+   
+
+}
