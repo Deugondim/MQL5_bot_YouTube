@@ -108,10 +108,13 @@ void OnTick()
    //---Strategy Trigger Ema---// 
    string OpenSignalEma = GetEmaOpenSignal(); // VAriable will return long or short bias if close is above or below EMA
    StringConcatenate(indicatorMetrics, indicatorMetrics, " | Ema Bias: ", OpenSignalEma);//Concatenate indicator values to output comment for user
- 
-   }
-
-      //---Enter Trades---/
+   
+   //---Strategy Trigger ATR---// 
+   double CurrentATR = GetATRValue(); // Gets ATR value double using custom function- convert double to string as per symbol sigits
+   StringConcatenate(indicatorMetrics, indicatorMetrics, " | ATR: ", GetATRValue);//Concatenate indicator values to output comment for user
+   
+   
+    //---Enter Trades---/
    if(OpenSignalMacd == "Long" && OpenSignalEma == "Long" ){
    
       ProcessTradeOpen(ORDER_TYPE_BUY);
@@ -120,6 +123,13 @@ void OnTick()
       
       ProcessTradeOpen(ORDER_TYPE_SELL);
    }
+
+
+
+   }
+
+  
+  
    
    Comment("\n \rExpert:",InpMagicNumber, "\n\r",
    "MT5 Server Time: ", TimeCurrent(), "\n\r",
