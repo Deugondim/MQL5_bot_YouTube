@@ -43,7 +43,7 @@ int OnInit()
    //Set up handle for macd indicator oninit
     HandleMacd = iMACD(Symbol(),Period(),MacdFast,MacSlow,MacdSignal,InpAppliedPrice);
     Print("Handle for Macd /", Symbol(), " / ", EnumToString(Period()),"successfully created") ;
-    
+
 //---
    return(INIT_SUCCEEDED);
   }
@@ -53,7 +53,14 @@ int OnInit()
 void OnDeinit(const int reason)
   {
 //---
+  //Remove indicator handle from Metatrader Cache
+   IndicatorRelease(HandleMacd);
+   IndicatorRelease(HandleEma);
+   IndicatorRelease(HandleATR);
+   Print("Released");
    
+
+
   }
 //+------------------------------------------------------------------+
 //| Expert tick function                                             |
