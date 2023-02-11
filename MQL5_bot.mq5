@@ -70,7 +70,37 @@ void OnTick()
    //Declare Variables
    TicksRecievedCount++; //Counts the number of ticks recieved
 
-
+   //Checks for new candle
+   bool IsNewCandle = false;
+   if(TimeLastTickProcessed != iTime(Symbol(), Period(),0))   
+   {
+      IsNewCandle = true;
+      TimeLastTickProcessed = iTime(Symbol(), Period(),0);
+   }
+   
+   if(IsNewCandle == true)
+   {
+   
+   TicksProcessedCount++; // count the number of ticks processed
+   indicatorMetrics = ""; // Initiate String for indicatorMetrics Variable. This will reset variable each time OnTick function runs
+   StringConcatenate(indicatorMetrics,Symbol() ," | Last Processed: ",TimeLastTickProcessed);
+   
+   
+   //---Strategy Trigger MACD---//
+   string OpenSignalMacd = GetMacdOpenSignal(); //Variable will return Long or Sort Bias only on trigger/cross event
+   StringConcatenate(indicatorMetrics, indicatorMetrics, " | MACD Bias: ", OpenSignalMacd);//Concatenate indicator values to output comment for user
+   
+  
+ 
+   }
+   
+   
+   Comment("\n \rExpert:",InpMagicNumber, "\n\r",
+   "MT5 Server Time: ", TimeCurrent(), "\n\r",
+   "Ticks Recieved: ",TicksRecievedCount, "\n\r",
+   "Ticks Processed: ",TicksProcessedCount, "\n\r\n\r",
+   "Symbols Traded: \n\r",
+   indicatorMetrics);
 
 
   }
