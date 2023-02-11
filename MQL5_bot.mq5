@@ -57,9 +57,7 @@ void OnDeinit(const int reason)
    IndicatorRelease(HandleMacd);
    IndicatorRelease(HandleEma);
    IndicatorRelease(HandleATR);
-   Print("Released");
-   
-
+   Print("Released"); 
 
   }
 //+------------------------------------------------------------------+
@@ -68,6 +66,12 @@ void OnDeinit(const int reason)
 void OnTick()
   {
 //---
-   
+     
+   //Declare Variables
+   TicksRecievedCount++; //Counts the number of ticks recieved
+
+
+
+
   }
 //+------------------------------------------------------------------+
