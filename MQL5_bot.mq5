@@ -55,6 +55,10 @@ int OnInit()
     HandleEma = iMA(Symbol(),Period(),EmaPeriod,0,MODE_EMA,InpAppliedPrice);
     Print("Handle for Ema /", Symbol(), " / ", EnumToString(Period()),"successfully created") ;
 
+    //Set up handle for ATR indicator oninit
+    HandleATR = iATR(Symbol(),Period(),AtrPeriod);
+    Print("Handle for ATR /", Symbol(), " / ", EnumToString(Period()),"successfully created") ;
+
 //---
    return(INIT_SUCCEEDED);
   }
