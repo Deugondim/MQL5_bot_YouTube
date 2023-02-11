@@ -124,7 +124,18 @@ string GetMacdOpenSignal()
    double   BufferMacd[];  //(prior, current confirmed, not confirmed)
    double   BufferSignal[];   //(prior, current confirmed, not confirmed)
    
-   
+   //Define Macd and Signal lines, from not confimed candle 0, for 3 candles, and stores results
+   bool  fillMacd = CopyBuffer(HandleMacd,IndexMacd,StartCandle,RequiredCandles,BufferMacd);
+   bool  fillSignal = CopyBuffer(HandleMacd,IndexSignal,StartCandle,RequiredCandles,BufferSignal);
+   if(fillMacd==false || fillSignal==false) 
+   {
+   return "Buffer not full"; //If buffers are not completely filled, return to end onTick
+   }
+   //Find required Macd signal lines and normalize to 10 places to prevent rounding errors
+   double   currentMacd = NormalizeDouble(BufferMacd[1],10);
+   double   currentSignal = NormalizeDouble(BufferSignal[1],10);
+   double   priorMacd = NormalizeDouble(BufferMacd[0],10);
+   double   priorSignal = NormalizeDouble(BufferSignal[0],10);
    
 
 }
