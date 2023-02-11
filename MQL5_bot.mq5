@@ -161,3 +161,39 @@ string GetMacdOpenSignal()
    }
 
 }
+
+ //Custom function that returns long and short signals base off EMA and Close Prices
+ string GetEmaOpenSignal()
+ {
+    //Set symbol string and indicator buffers
+   string   CurrentSymbol = Symbol();
+   const int StartCandle = 0;
+   const int RequiredCandles = 2; //How many candles are required to be stored in Expert - (current confirmed, not confirmed)
+   //Indicator Variables and Buffers
+   const int IndexEma = 0; //Ema Line
+   double   BufferEma[];  //(current confirmed, not confirmed)
+   
+   //Define Macd and Signal lines, from not confimed candle 0, for 3 candles, and stores results
+   bool  fillEma = CopyBuffer(HandleEma,IndexEma,StartCandle,RequiredCandles,BufferEma);
+   if(fillEma==false) 
+   {
+   return "Buffer not full"; //If buffers are not completely filled, return to end onTick
+   }
+   
+   //Gets the current confirmed Ema Value
+   double   currentEma = NormalizeDouble(BufferEma[1],10);
+   double   currentClose = NormalizeDouble(iClose(Symbol(),Period(),0),10);
+   
+   
+   //Submit Ema Long and Short Trades
+   if(currentClose>currentEma)
+   {
+      return  ("Long");
+   }else if(currentClose<currentEma)
+   {
+      return  ("Short");
+   }else
+   {
+      return  ("No Trade");
+   }
+ }
