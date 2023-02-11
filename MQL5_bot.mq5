@@ -137,5 +137,16 @@ string GetMacdOpenSignal()
    double   priorMacd = NormalizeDouble(BufferMacd[0],10);
    double   priorSignal = NormalizeDouble(BufferSignal[0],10);
    
+  //Submit MAcd Long and Short Trades
+   if(priorMacd <= priorSignal && currentMacd>currentSignal && currentMacd < 0 && currentSignal <0)
+   {
+      return  ("Long");
+   }else if(priorMacd >= priorSignal && currentMacd < currentSignal && currentMacd > 0 && currentSignal >0)
+   {
+      return  ("Short");
+   }else
+   {
+      return  ("No Trade");
+   }
 
 }
