@@ -162,6 +162,45 @@ string GetMacdOpenSignal()
 
 }
 
+//Process open trades for buy and sell
+ 
+ bool ProcessTradeOpen(ENUM_ORDER_TYPE orderType)
+ {
+ 
+   //Set symbol stirng and variables
+   string   CurrentSymbol = Symbol();
+   double   price =0;
+   double   stopLossPrice =0;
+   double   takeProfitPrice=0;
+   
+   //Get price, sl, tp for open and close orders
+   if(orderType == ORDER_TYPE_BUY)
+   {
+      
+      price = NormalizeDouble(SymbolInfoDouble(CurrentSymbol, SYMBOL_ASK), Digits());
+      stopLossPrice = NormalizeDouble(price - 0.01,Digits());
+      takeProfitPrice = NormalizeDouble(price + 0.02,Digits());
+      
+   }else if(orderType == ORDER_TYPE_SELL)
+      {
+     
+      price = NormalizeDouble(SymbolInfoDouble(CurrentSymbol, SYMBOL_BID), Digits());
+      stopLossPrice = NormalizeDouble(price + 0.01,Digits());
+      takeProfitPrice = NormalizeDouble(price - 0.02,Digits());
+     
+      }
+      
+      // get lot size
+      double lotSize =1;
+      
+      //Execute trades
+      Trade.PositionClose(CurrentSymbol);
+      Trade.PositionOpen(CurrentSymbol,orderType,lotSize,price,stopLossPrice,takeProfitPrice,InpTradeComment);
+      
+      //Add in any error handling
+      return(true);
+ } 
+
  //Custom function that returns long and short signals base off EMA and Close Prices
  string GetEmaOpenSignal()
  {
