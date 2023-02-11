@@ -29,6 +29,9 @@ int MacdFast = 12;
 int MacSlow = 26;
 int MacdSignal = 9;
 
+//Ema Variables and Handle
+int HandleEma;
+int EmaPeriod = 100;
 
 //+------------------------------------------------------------------+
 //| Expert initialization function                                   |
@@ -136,7 +139,7 @@ string GetMacdOpenSignal()
    double   currentSignal = NormalizeDouble(BufferSignal[1],10);
    double   priorMacd = NormalizeDouble(BufferMacd[0],10);
    double   priorSignal = NormalizeDouble(BufferSignal[0],10);
-   
+
   //Submit MAcd Long and Short Trades
    if(priorMacd <= priorSignal && currentMacd>currentSignal && currentMacd < 0 && currentSignal <0)
    {
