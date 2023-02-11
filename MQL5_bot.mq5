@@ -99,7 +99,9 @@ void OnTick()
    string OpenSignalMacd = GetMacdOpenSignal(); //Variable will return Long or Sort Bias only on trigger/cross event
    StringConcatenate(indicatorMetrics, indicatorMetrics, " | MACD Bias: ", OpenSignalMacd);//Concatenate indicator values to output comment for user
    
-  
+   //---Strategy Trigger Ema---// 
+   string OpenSignalEma = GetEmaOpenSignal(); // VAriable will return long or short bias if close is above or below EMA
+   StringConcatenate(indicatorMetrics, indicatorMetrics, " | Ema Bias: ", OpenSignalEma);//Concatenate indicator values to output comment for user
  
    }
    
