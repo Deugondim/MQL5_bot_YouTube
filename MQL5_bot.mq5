@@ -23,6 +23,13 @@ int TicksRecievedCount =0; // Counts the number of ticks from oninit function
 int TicksProcessedCount =0; // Counts the number of ticks processed from oninit function based off candle opens only
 static datetime TimeLastTickProcessed; //Stores the last time a tick  was processed based off cafle opens only
 
+//Macd Variables and Handle
+int HandleMacd;
+int MacdFast = 12;
+int MacSlow = 26;
+int MacdSignal = 9;
+
+
 //+------------------------------------------------------------------+
 //| Expert initialization function                                   |
 //+------------------------------------------------------------------+
