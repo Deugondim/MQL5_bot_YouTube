@@ -12,7 +12,10 @@
 #include <Trade\Trade.mqh> //Include MQL trade object functions
 CTrade   *Trade;
 
-
+//Setup Variables
+input int                  InpMagicNumber = 2000001;     //Unique identifier for this expert advisor 
+input string               InpTradeComment = __FILE__;   //Optional comment for trades
+input ENUM_APPLIED_PRICE   InpAppliedPrice = PRICE_CLOSE;//Applied price for indicators  
 
 //+------------------------------------------------------------------+
 //| Expert initialization function                                   |
