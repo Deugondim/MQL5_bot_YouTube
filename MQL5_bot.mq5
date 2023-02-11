@@ -33,6 +33,8 @@ int MacdSignal = 9;
 int HandleEma;
 int EmaPeriod = 100;
 
+
+
 //+------------------------------------------------------------------+
 //| Expert initialization function                                   |
 //+------------------------------------------------------------------+
@@ -46,6 +48,10 @@ int OnInit()
    //Set up handle for macd indicator oninit
     HandleMacd = iMACD(Symbol(),Period(),MacdFast,MacSlow,MacdSignal,InpAppliedPrice);
     Print("Handle for Macd /", Symbol(), " / ", EnumToString(Period()),"successfully created") ;
+    
+    //Set up handle for Ema indicator oninit
+    HandleEma = iMA(Symbol(),Period(),EmaPeriod,0,MODE_EMA,InpAppliedPrice);
+    Print("Handle for Ema /", Symbol(), " / ", EnumToString(Period()),"successfully created") ;
 
 //---
    return(INIT_SUCCEEDED);
