@@ -36,6 +36,10 @@ int MacdSignal = 9;
 int OnInit()
   {
 //---
+   // Declare magic number for all trades
+   Trade = new CTrade();
+   Trade.SetExpertMagicNumber(InpMagicNumber);
+
    
 //---
    return(INIT_SUCCEEDED);
