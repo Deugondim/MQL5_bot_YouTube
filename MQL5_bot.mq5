@@ -40,7 +40,10 @@ int OnInit()
    Trade = new CTrade();
    Trade.SetExpertMagicNumber(InpMagicNumber);
 
-   
+   //Set up handle for macd indicator oninit
+    HandleMacd = iMACD(Symbol(),Period(),MacdFast,MacSlow,MacdSignal,InpAppliedPrice);
+    Print("Handle for Macd /", Symbol(), " / ", EnumToString(Period()),"successfully created") ;
+    
 //---
    return(INIT_SUCCEEDED);
   }
