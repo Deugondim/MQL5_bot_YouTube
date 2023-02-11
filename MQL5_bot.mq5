@@ -261,3 +261,11 @@ string GetMacdOpenSignal()
       return  ("No Trade");
    }
  }
+
+    // Custom function to get ATR Value
+   double GetATRValue(){
+   //Set symbol string and indicator buffers
+   string   CurrentSymbol = Symbol();
+   const int   IndexAtr = 0; //ATR Value
+   double   BufferAtr[];   //Capture 3 candles for ATR [0,1,2] 
+   
