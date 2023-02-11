@@ -33,7 +33,9 @@ int MacdSignal = 9;
 int HandleEma;
 int EmaPeriod = 100;
 
-
+//ATR Handle and Variables
+int HandleATR;
+int AtrPeriod = 14;
 
 //+------------------------------------------------------------------+
 //| Expert initialization function                                   |
@@ -104,7 +106,7 @@ void OnTick()
    StringConcatenate(indicatorMetrics, indicatorMetrics, " | Ema Bias: ", OpenSignalEma);//Concatenate indicator values to output comment for user
  
    }
-   
+
       //---Enter Trades---/
    if(OpenSignalMacd == "Long" && OpenSignalEma == "Long" ){
    
