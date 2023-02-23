@@ -266,6 +266,19 @@ string GetMacdOpenSignal()
    double GetATRValue(){
    //Set symbol string and indicator buffers
    string   CurrentSymbol = Symbol();
-   const int   IndexAtr = 0; //ATR Value
-   double   BufferAtr[];   //Capture 3 candles for ATR [0,1,2] 
+   const int   StartCandle = 0;
+   const int   IndexATR = 0; //ATR Value
+   const int RequiredCandles = 3; //How many candles are required to be stored in Expert - (prior, current confirmed, not confirmed)
+   double   BufferATR[];   //Capture 3 candles for ATR [0,1,2] 
    
+   // Populate buffers for ATR Value; check erros
+   bool FillATR = CopyBuffer(HandleATR,IndexATR,StartCandle,RequiredCandles,BufferATR); // Copy buffe uses oldest as 0 (reversed)
+   if (FillATR == false)return(0);
+
+   //Find ATR for CAndle 1 only
+   double CurrentATR = NormalizeDouble(BufferATR[1],5);
+
+   //Return ATR value
+   return(CurrentATR);
+   
+   }
