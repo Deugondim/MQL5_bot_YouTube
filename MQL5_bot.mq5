@@ -110,8 +110,8 @@ void OnTick()
    StringConcatenate(indicatorMetrics, indicatorMetrics, " | Ema Bias: ", OpenSignalEma);//Concatenate indicator values to output comment for user
    
    //---Strategy Trigger ATR---// 
-   double CurrentATR = GetATRValue(); // Gets ATR value double using custom function- convert double to string as per symbol sigits
-   StringConcatenate(indicatorMetrics, indicatorMetrics, " | ATR: ", GetATRValue);//Concatenate indicator values to output comment for user
+   double CurrentAtr = GetATRValue(); // Gets ATR value double using custom function- convert double to string as per symbol sigits
+   StringConcatenate(indicatorMetrics, indicatorMetrics, " | ATR: ", CurrentAtr);//Concatenate indicator values to output comment for user
    
    
     //---Enter Trades---/
