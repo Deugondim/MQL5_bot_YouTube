@@ -23,6 +23,10 @@ int TicksRecievedCount =0; // Counts the number of ticks from oninit function
 int TicksProcessedCount =0; // Counts the number of ticks processed from oninit function based off candle opens only
 static datetime TimeLastTickProcessed; //Stores the last time a tick  was processed based off cafle opens only
 
+//Risk Metrics
+input double   ATRProfitMulti = 2.0; //ATR Profit Multiple
+input double   ATRLossMulti = 1.0; //ATR Loss Multiple
+
 //Macd Variables and Handle
 int HandleMacd;
 int MacdFast = 12;
@@ -110,18 +114,18 @@ void OnTick()
    StringConcatenate(indicatorMetrics, indicatorMetrics, " | Ema Bias: ", OpenSignalEma);//Concatenate indicator values to output comment for user
    
    //---Strategy Trigger ATR---// 
-   double CurrentAtr = GetATRValue(); // Gets ATR value double using custom function- convert double to string as per symbol sigits
-   StringConcatenate(indicatorMetrics, indicatorMetrics, " | ATR: ", CurrentAtr);//Concatenate indicator values to output comment for user
+   double CurrentATR = GetATRValue(); // Gets ATR value double using custom function- convert double to string as per symbol sigits
+   StringConcatenate(indicatorMetrics, indicatorMetrics, " | ATR: ", CurrentATR);//Concatenate indicator values to output comment for user
    
    
     //---Enter Trades---/
    if(OpenSignalMacd == "Long" && OpenSignalEma == "Long" ){
    
-      ProcessTradeOpen(ORDER_TYPE_BUY);
+      ProcessTradeOpen(ORDER_TYPE_BUY,CurrentATR) ;
    
    }else if(OpenSignalMacd == "Short" && OpenSignalEma == "Short" ){
       
-      ProcessTradeOpen(ORDER_TYPE_SELL);
+      ProcessTradeOpen(ORDER_TYPE_SELL,CurrentATR);
    }
 
 
@@ -189,7 +193,7 @@ string GetMacdOpenSignal()
 
 //Process open trades for buy and sell
  
- bool ProcessTradeOpen(ENUM_ORDER_TYPE orderType)
+ bool ProcessTradeOpen(ENUM_ORDER_TYPE orderType, double CurrentATR)
  {
  
    //Set symbol stirng and variables
@@ -203,15 +207,15 @@ string GetMacdOpenSignal()
    {
       
       price = NormalizeDouble(SymbolInfoDouble(CurrentSymbol, SYMBOL_ASK), Digits());
-      stopLossPrice = NormalizeDouble(price - 0.01,Digits());
-      takeProfitPrice = NormalizeDouble(price + 0.02,Digits());
+      stopLossPrice = NormalizeDouble(price - CurrentATR*ATRLossMulti,Digits());
+      takeProfitPrice = NormalizeDouble(price + CurrentATR*ATRProfitMulti,Digits());
       
    }else if(orderType == ORDER_TYPE_SELL)
       {
      
       price = NormalizeDouble(SymbolInfoDouble(CurrentSymbol, SYMBOL_BID), Digits());
-      stopLossPrice = NormalizeDouble(price + 0.01,Digits());
-      takeProfitPrice = NormalizeDouble(price - 0.02,Digits());
+      stopLossPrice = NormalizeDouble(price + CurrentATR*ATRLossMulti,Digits());
+      takeProfitPrice = NormalizeDouble(price - CurrentATR*ATRProfitMulti,Digits());
      
       }
       
