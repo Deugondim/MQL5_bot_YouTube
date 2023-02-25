@@ -24,6 +24,11 @@ int TicksProcessedCount =0; // Counts the number of ticks processed from oninit 
 static datetime TimeLastTickProcessed; //Stores the last time a tick  was processed based off cafle opens only
 
 //Risk Metrics
+input bool  RiskCompounding = false; // Use Compounded Risk Method?
+double   StartingEquity = 0.0; //Starting Equity
+double  CurrentEquityRisk = 0.0; //Equity that will be risked per trade
+double  CurrentEquity = 0.0; //Current Equity
+input double   MassLossPrc = 0.02; //PErcent risk per trade
 input double   ATRProfitMulti = 2.0; //ATR Profit Multiple
 input double   ATRLossMulti = 1.0; //ATR Loss Multiple
 
@@ -220,15 +225,55 @@ string GetMacdOpenSignal()
       }
       
       // get lot size
-      double lotSize =1;
+      double LotSize = OptimalLotSize(CurrentSymbol,Price,stopLossPrice);
       
       //Execute trades
       Trade.PositionClose(CurrentSymbol);
-      Trade.PositionOpen(CurrentSymbol,orderType,lotSize,price,stopLossPrice,takeProfitPrice,InpTradeComment);
+      Trade.PositionOpen(CurrentSymbol,orderType,LotSize,price,stopLossPrice,takeProfitPrice,InpTradeComment);
       
       //Add in any error handling
       return(true);
  } 
+   //Finds the optimal lot size for the trade
+   double OptimalLotSize(string CurrentSymbol, double EntryPrice, double StopLoss){
+
+       //Set symbol string and calculate point value
+      double TickSize      = SymbolInfoDouble(CurrentSymbol,SYMBOL_TRADE_TICK_SIZE);
+      double TickValue     = SymbolInfoDouble(CurrentSymbol,SYMBOL_TRADE_TICK_VALUE);
+      if(SymbolInfoInteger(CurrentSymbol,SYMBOL_DIGITS) <= 3)
+         TickValue = TickValue/100;
+      double PointAmount   = SymbolInfoDouble(CurrentSymbol,SYMBOL_POINT);
+      double TicksPerPoint = TickSize/PointAmount;
+      double PointValue    = TickValue/TicksPerPoint;
+
+      //Calculate risk based off entry and stop loss level by pips
+      double RiskPoints = MathAbs((EntryPrice - StopLoss)/TickSize);
+     
+      //Set risk model - Fixed or compounding
+      if(RiskCompounding == true)
+         CurrentEquityRisk = AccountInfoDouble(ACCOUNT_EQUITY);
+      else
+         CurrentEquityRisk = StartingEquity; 
+
+      //Calculate total risk amount in dollars
+      double RiskAmount = CurrentEquityRisk * MaxLossPrc;
+
+      //Calculate lot size
+      double RiskLots   = NormalizeDouble(RiskAmount/(RiskPoints*PointValue),2);
+
+      //Print values in Journal to check if operating correctly
+      PrintFormat("TickSize=%f,TickValue=%f,PointAmount=%f,TicksPerPoint=%f,PointValue=%f,",
+                     TickSize,TickValue,PointAmount,TicksPerPoint,PointValue);   
+      PrintFormat("EntryPrice=%f,StopLoss=%f,RiskPoints=%f,RiskAmount=%f,RiskLots=%f,",
+                     EntryPrice,StopLoss,RiskPoints,RiskAmount,RiskLots);   
+
+      //Return optimal lot size
+      return RiskLots;
+
+   }
+
+
+
 
  //Custom function that returns long and short signals base off EMA and Close Prices
  string GetEmaOpenSignal()
