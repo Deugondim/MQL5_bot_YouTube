@@ -28,7 +28,7 @@ input bool  RiskCompounding = false; // Use Compounded Risk Method?
 double   StartingEquity = 0.0; //Starting Equity
 double  CurrentEquityRisk = 0.0; //Equity that will be risked per trade
 double  CurrentEquity = 0.0; //Current Equity
-input double   MassLossPrc = 0.02; //PErcent risk per trade
+input double   MaxLossPrc = 0.02; //PErcent risk per trade
 input double   ATRProfitMulti = 2.0; //ATR Profit Multiple
 input double   ATRLossMulti = 1.0; //ATR Loss Multiple
 
@@ -225,7 +225,7 @@ string GetMacdOpenSignal()
       }
       
       // get lot size
-      double LotSize = OptimalLotSize(CurrentSymbol,Price,stopLossPrice);
+      double LotSize = OptimalLotSize(CurrentSymbol,price,stopLossPrice);
       
       //Execute trades
       Trade.PositionClose(CurrentSymbol);
