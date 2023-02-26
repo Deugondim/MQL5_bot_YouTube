@@ -23,6 +23,10 @@ int TicksRecievedCount =0; // Counts the number of ticks from oninit function
 int TicksProcessedCount =0; // Counts the number of ticks processed from oninit function based off candle opens only
 static datetime TimeLastTickProcessed; //Stores the last time a tick  was processed based off cafle opens only
 
+//Store Position Ticket Number
+ulong    TicketNumber = 0;
+
+
 //Risk Metrics
 input bool  RiskCompounding = false; // Use Compounded Risk Method?
 double   StartingEquity = 0.0; //Starting Equity
@@ -126,11 +130,11 @@ void OnTick()
     //---Enter Trades---/
    if(OpenSignalMacd == "Long" && OpenSignalEma == "Long" ){
    
-      ProcessTradeOpen(ORDER_TYPE_BUY,CurrentATR) ;
+      TicketNumber = ProcessTradeOpen(ORDER_TYPE_BUY,CurrentATR) ;
    
    }else if(OpenSignalMacd == "Short" && OpenSignalEma == "Short" ){
       
-      ProcessTradeOpen(ORDER_TYPE_SELL,CurrentATR);
+      TicketNumber = ProcessTradeOpen(ORDER_TYPE_SELL,CurrentATR);
    }
 
 
@@ -198,7 +202,7 @@ string GetMacdOpenSignal()
 
 //Process open trades for buy and sell
  
- bool ProcessTradeOpen(ENUM_ORDER_TYPE orderType, double CurrentATR)
+ulong ProcessTradeOpen(ENUM_ORDER_TYPE orderType, double CurrentATR)
  {
  
    //Set symbol stirng and variables
@@ -231,9 +235,16 @@ string GetMacdOpenSignal()
       Trade.PositionClose(CurrentSymbol);
       Trade.PositionOpen(CurrentSymbol,orderType,LotSize,price,stopLossPrice,takeProfitPrice,InpTradeComment);
       
+      //Get Position Ticket 
+      ulong   Ticket = PositionGetTicket(0);
+
+
       //Add in any error handling
-      return(true);
+      Print("Trade Processed For ",CurrentSymbol, " Order Type ", orderType," Lot Size ",LotSize," Ticket ", Ticket);
+      return(Ticket);
  } 
+
+
    //Finds the optimal lot size for the trade
    double OptimalLotSize(string CurrentSymbol, double EntryPrice, double StopLoss){
 
