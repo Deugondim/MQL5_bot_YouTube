@@ -110,8 +110,14 @@ void OnTick()
    {
    
    TicksProcessedCount++; // count the number of ticks processed
+   
+   //Check if position is still open. If not open, return 0
+   if(!PositionSelectByTicket(TicketNumber)){
+      TicketNumber = 0;
+   };
+   
    indicatorMetrics = ""; // Initiate String for indicatorMetrics Variable. This will reset variable each time OnTick function runs
-   StringConcatenate(indicatorMetrics,Symbol() ," | Last Processed: ",TimeLastTickProcessed);
+   StringConcatenate(indicatorMetrics,Symbol() ," | Last Processed: ",TimeLastTickProcessed, " | Open Ticket ",TicketNumber);
    
    
    //---Strategy Trigger MACD---//
