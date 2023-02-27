@@ -28,6 +28,7 @@ ulong    TicketNumber = 0;
 
 
 //Risk Metrics
+input bool  TslCheck =true; //USe Trailing Stop Loss?
 input bool  RiskCompounding = false; // Use Compounded Risk Method?
 double   StartingEquity = 0.0; //Starting Equity
 double  CurrentEquityRisk = 0.0; //Equity that will be risked per trade
@@ -143,7 +144,10 @@ void OnTick()
       TicketNumber = ProcessTradeOpen(ORDER_TYPE_SELL,CurrentATR);
    }
 
-
+   //Adjust Open Positions - Trailing Stop Loss
+   if(TslCheck == true){
+      AdjustTsl(TicketNumber, CurrentATR, ATRLossMulti);
+   }
 
    }
 
@@ -347,4 +351,10 @@ ulong ProcessTradeOpen(ENUM_ORDER_TYPE orderType, double CurrentATR)
    //Return ATR value
    return(CurrentATR);
    
+   }
+
+
+   void  AdjusyTsl(ulong Ticket,double CurrentATR, double ATRMulti){
+
+
    }
