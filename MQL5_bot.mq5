@@ -354,7 +354,58 @@ ulong ProcessTradeOpen(ENUM_ORDER_TYPE orderType, double CurrentATR)
    }
 
 
-   void  AdjusyTsl(ulong Ticket,double CurrentATR, double ATRMulti){
+   void  AdjustTsl(ulong Ticket,double CurrentATR, double ATRMulti){
+
+    //Set symbol string and variables
+   string CurrentSymbol   = Symbol();
+   double Price           = 0.0;
+   double OptimalStopLoss = 0.0;  
+
+   //Check correct ticket number is selected for further position data to be stored. Return if error.
+   if (!PositionSelectByTicket(Ticket))
+      return;
+
+   //Store position data variables
+   ulong  PositionDirection = PositionGetInteger(POSITION_TYPE);
+   double CurrentStopLoss   = PositionGetDouble(POSITION_SL);
+   double CurrentTakeProfit = PositionGetDouble(POSITION_TP);
+   
+   //Check if position direction is long 
+   if (PositionDirection==POSITION_TYPE_BUY)
+   {
+      //Get optimal stop loss value
+      Price           = NormalizeDouble(SymbolInfoDouble(CurrentSymbol, SYMBOL_ASK), Digits());
+      OptimalStopLoss = NormalizeDouble(Price - CurrentATR*ATRMulti, Digits());
+      
+      //Check if optimal stop loss is greater than current stop loss. If TRUE, adjust stop loss
+      if(OptimalStopLoss > CurrentStopLoss)
+      {
+         Trade.PositionModify(Ticket,OptimalStopLoss,CurrentTakeProfit);
+         Print("Ticket ", Ticket, " for symbol ", CurrentSymbol," stop loss adjusted to ", OptimalStopLoss);
+      }
+
+      //Return once complete
+      return;
+   } 
+
+   //Check if position direction is short 
+   if (PositionDirection==POSITION_TYPE_SELL)
+   {
+      //Get optimal stop loss value
+      Price           = NormalizeDouble(SymbolInfoDouble(CurrentSymbol, SYMBOL_BID), Digits());
+      OptimalStopLoss = NormalizeDouble(Price + CurrentATR*ATRMulti, Digits());
+
+      //Check if optimal stop loss is less than current stop loss. If TRUE, adjust stop loss
+      if(OptimalStopLoss < CurrentStopLoss)
+      {
+         Trade.PositionModify(Ticket,OptimalStopLoss,CurrentTakeProfit);
+         Print("Ticket ", Ticket, " for symbol ", CurrentSymbol," stop loss adjusted to ", OptimalStopLoss);
+      }
+      
+      //Return once complete
+      return;
+   } 
+
 
 
    }
