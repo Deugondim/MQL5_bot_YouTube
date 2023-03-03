@@ -32,7 +32,6 @@ input bool  TslCheck =true; //USe Trailing Stop Loss?
 input bool  RiskCompounding = false; // Use Compounded Risk Method?
 double   StartingEquity = 0.0; //Starting Equity
 double  CurrentEquityRisk = 0.0; //Equity that will be risked per trade
-double  CurrentEquity = 0.0; //Current Equity
 input double   MaxLossPrc = 0.02; //PErcent risk per trade
 input double   ATRProfitMulti = 2.0; //ATR Profit Multiple
 input double   ATRLossMulti = 1.0; //ATR Loss Multiple
@@ -40,7 +39,7 @@ input double   ATRLossMulti = 1.0; //ATR Loss Multiple
 //Macd Variables and Handle
 int HandleMacd;
 int MacdFast = 12;
-int MacSlow = 26;
+int MacdSlow = 26;
 int MacdSignal = 9;
 
 //Ema Variables and Handle
@@ -60,6 +59,9 @@ int OnInit()
    // Declare magic number for all trades
    Trade = new CTrade();
    Trade.SetExpertMagicNumber(InpMagicNumber);
+
+    //Store starting equity onInit
+   StartingEquity  = AccountInfoDouble(ACCOUNT_EQUITY);
 
    //Set up handle for macd indicator oninit
     HandleMacd = iMACD(Symbol(),Period(),MacdFast,MacSlow,MacdSignal,InpAppliedPrice);
@@ -83,9 +85,9 @@ void OnDeinit(const int reason)
   {
 //---
   //Remove indicator handle from Metatrader Cache
+   IndicatorRelease(HandleATR);
    IndicatorRelease(HandleMacd);
    IndicatorRelease(HandleEma);
-   IndicatorRelease(HandleATR);
    Print("Released"); 
 
   }
@@ -121,6 +123,10 @@ void OnTick()
    StringConcatenate(indicatorMetrics,Symbol() ," | Last Processed: ",TimeLastTickProcessed, " | Open Ticket ",TicketNumber);
    
    
+   //---Strategy Trigger ATR---// 
+   double CurrentATR = GetATRValue(); // Gets ATR value double using custom function- convert double to string as per symbol sigits
+   StringConcatenate(indicatorMetrics, indicatorMetrics, " | ATR: ", CurrentATR);//Concatenate indicator values to output comment for user
+
    //---Strategy Trigger MACD---//
    string OpenSignalMacd = GetMacdOpenSignal(); //Variable will return Long or Sort Bias only on trigger/cross event
    StringConcatenate(indicatorMetrics, indicatorMetrics, " | MACD Bias: ", OpenSignalMacd);//Concatenate indicator values to output comment for user
@@ -129,9 +135,6 @@ void OnTick()
    string OpenSignalEma = GetEmaOpenSignal(); // VAriable will return long or short bias if close is above or below EMA
    StringConcatenate(indicatorMetrics, indicatorMetrics, " | Ema Bias: ", OpenSignalEma);//Concatenate indicator values to output comment for user
    
-   //---Strategy Trigger ATR---// 
-   double CurrentATR = GetATRValue(); // Gets ATR value double using custom function- convert double to string as per symbol sigits
-   StringConcatenate(indicatorMetrics, indicatorMetrics, " | ATR: ", CurrentATR);//Concatenate indicator values to output comment for user
    
    
     //---Enter Trades---/
@@ -197,10 +200,10 @@ string GetMacdOpenSignal()
    double   priorSignal = NormalizeDouble(BufferSignal[0],10);
 
   //Submit MAcd Long and Short Trades
-   if(priorMacd <= priorSignal && currentMacd>currentSignal && currentMacd < 0 && currentSignal <0)
+   if(priorMacd <= priorSignal && currentMacd>currentSignal && currentMacd < 0 && currentSignal < 0)
    {
       return  ("Long");
-   }else if(priorMacd >= priorSignal && currentMacd < currentSignal && currentMacd > 0 && currentSignal >0)
+   }else if(priorMacd >= priorSignal && currentMacd < currentSignal && currentMacd > 0 && currentSignal > 0)
    {
       return  ("Short");
    }else
